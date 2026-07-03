@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greeting Functions Unit Tests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+        .pass {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .fail {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .summary {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3ff;
+            border-radius: 4px;
+        }
+        h1 {
+            color: #333;
+        }
+        h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Greeting Functions Unit Tests</h1>
+    <div id="test-results"></div>
+    <div id="summary" class="summary"></div>
+
+    <script>
+        // Copy the functions from app.js
+        function formatTime(date) {
+            if (!(date instanceof Date) || isNaN(date.getTime())) {
+                return "-- : -- : -- --";
+            }
+            
+            let hours = date.getHours();
+            const minutes = date.getMinutes();
+            const seconds = date.getSeconds();
+            
+            const period = hours >= 12 ? "PM" : "AM";
+            
+            hours = hours % 12;
+            hours = hours === 0 ? 12 : hours;
+            
+            const hoursStr = String(hours).padStart(2, '0');
+            const minutesStr = String(minutes).padStart(2, '0');
+            const secondsStr = String(seconds).padStart(2, '0');
+            
+            return `${hoursStr}:${minutesStr}:${secondsStr} ${period}`;
+        }
+
+        function formatDate(date) {
+            if (!(date instanceof Date) || isNaN(date.getTime())) {
+                return "Date unavailable";
+            }
+            
+            const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                            'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            const dayOfWeek = daysOfWeek[date.getDay()];
+            const month = months[date.getMonth()];
+            const day = String(date.getDate()).padStart(2, '0');
+            const year = date.getFullYear();
+            
+            return `${dayOfWeek}, ${month} ${day}, ${year}`;
+        }
+
+        function getGreeting(hour) {
+            if (hour >= 5 && hour < 12) {
+                return "Good morning";
+            } else if (hour >= 12 && hour < 17) {
+                return "Good afternoon";
+            } else if (hour >= 17 && hour < 21) {
+                return "Good evening";
+            } else {
+                return "Good night";
+            }
+        }
+
+        // Simple testing framework
+        let passCount = 0;
+        let failCount = 0;
+        const resultsDiv = document.getElementById('test-results');
+
+        function assertEquals(actual, expected, testName) {
+            const passed = actual === expected;
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${passed ? 'pass' : 'fail'}`;
+            
+            if (passed) {
+                resultDiv.textContent = `✓ PASS: ${testName}`;
+                passCount++;
+            } else {
+                resultDiv.textContent = `✗ FAIL: ${testName}\n  Expected: ${expected}\n  Got: ${actual}`;
+                failCount++;
+            }
+            
+            resultsDiv.appendChild(resultDiv);
+        }
+
+        function assertMatches(actual, pattern, testName) {
+            const passed = pattern.test(actual);
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${passed ? 'pass' : 'fail'}`;
+            
+            if (passed) {
+                resultDiv.textContent = `✓ PASS: ${testName}`;
+                passCount++;
+            } else {
+                resultDiv.textContent = `✗ FAIL: ${testName}\n  Expected to match: ${pattern}\n  Got: ${actual}`;
+                failCount++;
+            }
+            
+            resultsDiv.appendChild(resultDiv);
+        }
+
+        // Run tests
+        function runTests() {
+            // Test formatTime
+            const testDate1 = new Date(2024, 6, 3, 9, 5, 3); // July 3, 2024, 9:05:03 AM
+            assertEquals(formatTime(testDate1), "09:05:03 AM", "formatTime with morning time");
+
+            const testDate2 = new Date(2024, 6, 3, 15, 30, 45); // 3:30:45 PM
+            assertEquals(formatTime(testDate2), "03:30:45 PM", "formatTime with afternoon time");
+
+            const testDate3 = new Date(2024, 6, 3, 0, 0, 0); // Midnight
+            assertEquals(formatTime(testDate3), "12:00:00 AM", "formatTime with midnight");
+
+            const testDate4 = new Date(2024, 6, 3, 12, 0, 0); // Noon
+            assertEquals(formatTime(testDate4), "12:00:00 PM", "formatTime with noon");
+
+            const testDate5 = new Date(2024, 6, 3, 23, 59, 59); // 11:59:59 PM
+            assertEquals(formatTime(testDate5), "11:59:59 PM", "formatTime with late night");
+
+            assertEquals(formatTime(new Date('invalid')), "-- : -- : -- --", "formatTime with invalid date");
+
+            // Test formatDate
+            const dateTest1 = new Date(2026, 6, 3); // July 3, 2026 (Friday)
+            assertEquals(formatDate(dateTest1), "Friday, July 03, 2026", "formatDate with standard date");
+
+            const dateTest2 = new Date(2024, 0, 1); // January 1, 2024 (Monday)
+            assertEquals(formatDate(dateTest2), "Monday, January 01, 2024", "formatDate with January date");
+
+            const dateTest3 = new Date(2024, 11, 31); // December 31, 2024 (Tuesday)
+            assertEquals(formatDate(dateTest3), "Tuesday, December 31, 2024", "formatDate with year-end date");
+
+            assertEquals(formatDate(new Date('invalid')), "Date unavailable", "formatDate with invalid date");
+
+            // Test getGreeting
+            assertEquals(getGreeting(5), "Good morning", "getGreeting at 5am (morning start)");
+            assertEquals(getGreeting(11), "Good morning", "getGreeting at 11am (morning end)");
+            assertEquals(getGreeting(12), "Good afternoon", "getGreeting at noon (afternoon start)");
+            assertEquals(getGreeting(16), "Good afternoon", "getGreeting at 4pm (afternoon end)");
+            assertEquals(getGreeting(17), "Good evening", "getGreeting at 5pm (evening start)");
+            assertEquals(getGreeting(20), "Good evening", "getGreeting at 8pm (evening end)");
+            assertEquals(getGreeting(21), "Good night", "getGreeting at 9pm (night start)");
+            assertEquals(getGreeting(23), "Good night", "getGreeting at 11pm");
+            assertEquals(getGreeting(0), "Good night", "getGreeting at midnight");
+            assertEquals(getGreeting(4), "Good night", "getGreeting at 4am (night end)");
+
+            // Test time format pattern
+            const randomDate = new Date(2024, 5, 15, 14, 25, 30);
+            const timePattern = /^(0[1-9]|1[0-2]):[0-5][0-9]:[0-5][0-9] (AM|PM)$/;
+            assertMatches(formatTime(randomDate), timePattern, "formatTime matches HH:MM:SS AM/PM pattern");
+
+            // Display summary
+            const summaryDiv = document.getElementById('summary');
+            summaryDiv.innerHTML = `
+                <h2>Test Summary</h2>
+                <p><strong>Total Tests:</strong> ${passCount + failCount}</p>
+                <p><strong>Passed:</strong> ${passCount}</p>
+                <p><strong>Failed:</strong> ${failCount}</p>
+                <p><strong>Success Rate:</strong> ${((passCount / (passCount + failCount)) * 100).toFixed(2)}%</p>
+            `;
+        }
+
+        // Run tests when page loads
+        runTests();
+    </script>
+</body>
+</html>

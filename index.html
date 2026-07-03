@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A productivity dashboard with greeting display, focus timer, task management, and quick links">
+    <title>Life Dashboard</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <!-- Header: Greeting Module -->
+    <header id="greeting-section">
+        <div id="greeting-display"></div>
+        <time id="time-display"></time>
+        <time id="date-display"></time>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Focus Timer Module -->
+        <section id="timer-section" aria-label="Focus Timer">
+            <h2>Focus Timer</h2>
+            <div id="timer-display" aria-live="polite" aria-atomic="true">25:00</div>
+            <div id="timer-controls">
+                <button id="start-button" type="button" aria-label="Start timer">Start</button>
+                <button id="stop-button" type="button" aria-label="Stop timer">Stop</button>
+                <button id="reset-button" type="button" aria-label="Reset timer">Reset</button>
+            </div>
+        </section>
+
+        <!-- Task Manager Module -->
+        <section id="task-section" aria-label="Task Manager">
+            <h2>Task Manager</h2>
+            <div id="task-input-container">
+                <input 
+                    type="text" 
+                    id="task-input" 
+                    placeholder="Enter a new task" 
+                    maxlength="500"
+                    aria-label="New task description"
+                />
+                <button id="add-task-button" type="button">Add Task</button>
+            </div>
+            <div id="task-error-message" class="error-message" role="alert" aria-live="assertive"></div>
+            <ul id="task-list" aria-label="Task list"></ul>
+        </section>
+
+        <!-- Quick Links Module -->
+        <section id="quick-links-section" aria-label="Quick Links">
+            <h2>Quick Links</h2>
+            <div id="quick-links-input-container">
+                <input 
+                    type="text" 
+                    id="link-name-input" 
+                    placeholder="Website name" 
+                    maxlength="50"
+                    aria-label="Website name"
+                />
+                <input 
+                    type="url" 
+                    id="link-url-input" 
+                    placeholder="https://example.com"
+                    aria-label="Website URL"
+                />
+                <button id="add-link-button" type="button">Add Link</button>
+            </div>
+            <div id="link-error-message" class="error-message" role="alert" aria-live="assertive"></div>
+            <nav id="quick-links-container" aria-label="Quick links navigation"></nav>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Life Dashboard. All rights reserved.</p>
+    </footer>
+
+    <!-- Storage Error Display -->
+    <div id="storage-error-message" class="error-message" role="alert" aria-live="assertive"></div>
+
+    <script src="./js/app.js"></script>
+</body>
+</html>
